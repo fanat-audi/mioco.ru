@@ -295,31 +295,31 @@
 <body>
     <div class="bg-blur"></div>
     
-    <img src="st1.png" class="sticker sticker-1" alt="sticker">
-    <img src="st3.png" class="sticker sticker-2" alt="sticker">
-    <img src="st2.png" class="sticker sticker-3" alt="sticker">
-    <img src="st4.png" class="sticker sticker-4" alt="sticker">
-    <img src="st2.png" class="sticker sticker-5" alt="sticker">
-    <img src="st1.png" class="sticker sticker-6" alt="sticker">
-    <img src="st4.png" class="sticker sticker-7" alt="sticker">
-    <img src="st3.png" class="sticker sticker-8" alt="sticker">
-    <img src="st4.png" class="sticker sticker-9" alt="sticker">
-    <img src="st2.png" class="sticker sticker-10" alt="sticker">
-    <img src="st1.png" class="sticker sticker-11" alt="sticker">
-    <img src="st3.png" class="sticker sticker-12" alt="sticker">
-    <img src="st2.png" class="sticker sticker-13" alt="sticker">
-    <img src="st4.png" class="sticker sticker-14" alt="sticker">
-    <img src="st1.png" class="sticker sticker-15" alt="sticker">
-    <img src="st3.png" class="sticker sticker-16" alt="sticker">
-    <img src="st4.png" class="sticker sticker-17" alt="sticker">
-    <img src="st1.png" class="sticker sticker-18" alt="sticker">
-    <img src="st2.png" class="sticker sticker-19" alt="sticker">
-    <img src="st3.png" class="sticker sticker-20" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-1" alt="sticker">
+    <img src="https://i.postimg.cc/vg1s8Jx0/st3.png" class="sticker sticker-2" alt="sticker">
+    <img src="https://i.postimg.cc/9R4hX6wp/st2.png" class="sticker sticker-3" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-4" alt="sticker">
+    <img src="https://i.postimg.cc/9R4hX6wp/st2.png" class="sticker sticker-5" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-6" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-7" alt="sticker">
+    <img src="https://i.postimg.cc/vg1s8Jx0/st3.png" class="sticker sticker-8" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-9" alt="sticker">
+    <img src="https://i.postimg.cc/9R4hX6wp/st2.png" class="sticker sticker-10" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-11" alt="sticker">
+    <img src="https://i.postimg.cc/vg1s8Jx0/st3.png" class="sticker sticker-12" alt="sticker">
+    <img src="https://i.postimg.cc/9R4hX6wp/st2.png" class="sticker sticker-13" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-14" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-15" alt="sticker">
+    <img src="https://i.postimg.cc/vg1s8Jx0/st3.png" class="sticker sticker-16" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-17" alt="sticker">
+    <img src="https://i.postimg.cc/sQBrfkGP/st1.png" class="sticker sticker-18" alt="sticker">
+    <img src="https://i.postimg.cc/9R4hX6wp/st2.png" class="sticker sticker-19" alt="sticker">
+    <img src="https://i.postimg.cc/vg1s8Jx0/st3.png" class="sticker sticker-20" alt="sticker">
     
     <div class="container">
         <header class="header fade-in">
             <div class="avatar">
-                <img src="audi.png" alt="miocoru">
+                <img src="https://i.postimg.cc/2jJfD3Kr/audi.png" alt="miocoru">
             </div>
             <h1 class="name">@miocoru</h1>
             <p class="bio">Python Developer</p>
@@ -396,28 +396,13 @@
 
         function positionStickers() {
             const stickers = document.querySelectorAll('.sticker');
-            const container = document.querySelector('.container');
-            const containerRect = container.getBoundingClientRect();
             
             stickers.forEach(sticker => {
                 const maxX = window.innerWidth - sticker.offsetWidth;
                 const maxY = window.innerHeight - sticker.offsetHeight;
                 
-                let x, y;
-                let attempts = 0;
-                const maxAttempts = 50;
-                
-                do {
-                    x = Math.random() * maxX;
-                    y = Math.random() * maxY;
-                    attempts++;
-                } while (
-                    attempts < maxAttempts && 
-                    x > containerRect.left - sticker.offsetWidth && 
-                    x < containerRect.right && 
-                    y > containerRect.top - sticker.offsetHeight && 
-                    y < containerRect.bottom
-                );
+                const x = Math.random() * maxX;
+                const y = Math.random() * maxY;
                 
                 sticker.style.left = x + 'px';
                 sticker.style.top = y + 'px';
