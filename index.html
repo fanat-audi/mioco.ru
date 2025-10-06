@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>miocoru</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: rgba(30, 30, 40, 0.7);
+            --accent-color: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            border: 3px solid var(--accent-color);
+            overflow: hidden;
+            background: var(--secondary-bg);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .name {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, var(--accent-color), #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            text-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .bio {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            font-weight: 300;
+        }
+
+        .links {
+            margin-bottom: 30px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 400;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .link-item:hover::before {
+            left: 100%;
+        }
+
+        .link-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+        }
+
+        .link-item i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .social-link:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 300;
+            opacity: 0.7;
+        }
+
+        .link-highlight {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: var(--accent-color);
+        }
+
+        .link-highlight:hover {
+            background: rgba(139, 92, 246, 0.25);
+        }
+
+        .bg-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .sticker {
+            position: fixed;
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.7;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .sticker:hover {
+            opacity: 0.9;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .sticker-1 { width: 60px; height: 60px; animation: float 6s ease-in-out infinite; }
+        .sticker-2 { width: 55px; height: 55px; animation: float 7s ease-in-out infinite 1s; }
+        .sticker-3 { width: 70px; height: 70px; animation: float 8s ease-in-out infinite 0.5s; }
+        .sticker-4 { width: 65px; height: 65px; animation: float 5s ease-in-out infinite 1.5s; }
+        .sticker-5 { width: 50px; height: 50px; animation: float 9s ease-in-out infinite 0.8s; }
+        .sticker-6 { width: 75px; height: 75px; animation: float 6.5s ease-in-out infinite 1.2s; }
+        .sticker-7 { width: 45px; height: 45px; animation: float 7.5s ease-in-out infinite 0.3s; }
+        .sticker-8 { width: 40px; height: 40px; animation: float 8.5s ease-in-out infinite 1s; }
+        .sticker-9 { width: 65px; height: 65px; animation: float 6.2s ease-in-out infinite 0.2s; }
+        .sticker-10 { width: 58px; height: 58px; animation: float 7.8s ease-in-out infinite 1.3s; }
+        .sticker-11 { width: 72px; height: 72px; animation: float 8.2s ease-in-out infinite 0.7s; }
+        .sticker-12 { width: 63px; height: 63px; animation: float 5.8s ease-in-out infinite 1.7s; }
+        .sticker-13 { width: 52px; height: 52px; animation: float 9.2s ease-in-out infinite 0.4s; }
+        .sticker-14 { width: 68px; height: 68px; animation: float 6.8s ease-in-out infinite 1.4s; }
+        .sticker-15 { width: 47px; height: 47px; animation: float 7.2s ease-in-out infinite 0.6s; }
+        .sticker-16 { width: 42px; height: 42px; animation: float 8.8s ease-in-out infinite 1.1s; }
+        .sticker-17 { width: 56px; height: 56px; animation: float 6.7s ease-in-out infinite 0.9s; }
+        .sticker-18 { width: 61px; height: 61px; animation: float 7.3s ease-in-out infinite 1.6s; }
+        .sticker-19 { width: 53px; height: 53px; animation: float 8.3s ease-in-out infinite 0.8s; }
+        .sticker-20 { width: 44px; height: 44px; animation: float 5.5s ease-in-out infinite 1.8s; }
+
+        @media (max-width: 768px) {
+            .sticker {
+                width: 35px !important;
+                height: 35px !important;
+                opacity: 0.5;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .avatar {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .name {
+                font-size: 28px;
+            }
+            
+            .link-item {
+                padding: 16px 18px;
+            }
+
+            .sticker {
+                width: 25px !important;
+                height: 25px !important;
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-2deg);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blur"></div>
+    
+    <img src="st1.png" class="sticker sticker-1" alt="sticker">
+    <img src="st3.png" class="sticker sticker-2" alt="sticker">
+    <img src="st2.png" class="sticker sticker-3" alt="sticker">
+    <img src="st4.png" class="sticker sticker-4" alt="sticker">
+    <img src="st2.png" class="sticker sticker-5" alt="sticker">
+    <img src="st1.png" class="sticker sticker-6" alt="sticker">
+    <img src="st4.png" class="sticker sticker-7" alt="sticker">
+    <img src="st3.png" class="sticker sticker-8" alt="sticker">
+    <img src="st4.png" class="sticker sticker-9" alt="sticker">
+    <img src="st2.png" class="sticker sticker-10" alt="sticker">
+    <img src="st1.png" class="sticker sticker-11" alt="sticker">
+    <img src="st3.png" class="sticker sticker-12" alt="sticker">
+    <img src="st2.png" class="sticker sticker-13" alt="sticker">
+    <img src="st4.png" class="sticker sticker-14" alt="sticker">
+    <img src="st1.png" class="sticker sticker-15" alt="sticker">
+    <img src="st3.png" class="sticker sticker-16" alt="sticker">
+    <img src="st4.png" class="sticker sticker-17" alt="sticker">
+    <img src="st1.png" class="sticker sticker-18" alt="sticker">
+    <img src="st2.png" class="sticker sticker-19" alt="sticker">
+    <img src="st3.png" class="sticker sticker-20" alt="sticker">
+    
+    <div class="container">
+        <header class="header fade-in">
+            <div class="avatar">
+                <img src="https://cdn.discordapp.com/avatars/673592832811860003/ac53a37a5af70b16d304e7bd024dd8cd.webp?size=512" alt="miocoru">
+            </div>
+            <h1 class="name">@miocoru</h1>
+            <p class="bio">Python Developer</p>
+            <p class="bio">15 y.o. | Saint-Petersburg, Russia</p>
+        </header>
+
+        <div class="links">
+            
+            <a href="https://t.me/miocoru" class="link-item fade-in" target="_blank" style="animation-delay: 0.2s">
+                <i class="fab fa-telegram"></i> Telegram
+            </a>
+            
+            <a href="https://discord.com/users/673592832811860003" class="link-item fade-in" target="_blank" style="animation-delay: 0.3s">
+                <i class="fab fa-discord"></i> Discord
+            </a>
+            
+            <a href="https://t.me/iced_core" class="link-item link-highlight fade-in" target="_blank" style="animation-delay: 0.6s">
+                <i class="fas fa-heart"></i> My Channel
+            </a>
+        </div>
+
+        <footer class="footer fade-in" style="animation-delay: 1.1s">
+            <p>© 2019-2025 | created by miocoru & whiskas_off</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach((element, index) => {
+                element.style.opacity = '0';
+            });
+
+            setTimeout(() => {
+                elements.forEach((element, index) => {
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                    }, index * 100);
+                });
+            }, 300);
+        });
+
+        document.querySelectorAll('.link-item').forEach(link => {
+            link.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const angleX = (y - centerY) / 15;
+                const angleY = (centerX - x) / 15;
+                
+                this.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) translateY(-2px) scale(1.02)`;
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+            });
+        });
+
+        document.querySelectorAll('.sticker').forEach(sticker => {
+            sticker.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.2) rotate(10deg)';
+                this.style.opacity = '0.9';
+            });
+            
+            sticker.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.opacity = '0.7';
+            });
+        });
+
+        function positionStickers() {
+            const stickers = document.querySelectorAll('.sticker');
+            const container = document.querySelector('.container');
+            const containerRect = container.getBoundingClientRect();
+            
+            stickers.forEach(sticker => {
+                const maxX = window.innerWidth - sticker.offsetWidth;
+                const maxY = window.innerHeight - sticker.offsetHeight;
+                
+                let x, y;
+                let attempts = 0;
+                const maxAttempts = 50;
+                
+                do {
+                    x = Math.random() * maxX;
+                    y = Math.random() * maxY;
+                    attempts++;
+                } while (
+                    attempts < maxAttempts && 
+                    x > containerRect.left - sticker.offsetWidth && 
+                    x < containerRect.right && 
+                    y > containerRect.top - sticker.offsetHeight && 
+                    y < containerRect.bottom
+                );
+                
+                sticker.style.left = x + 'px';
+                sticker.style.top = y + 'px';
+            });
+        }
+
+        window.addEventListener('load', positionStickers);
+        window.addEventListener('resize', positionStickers);
+    </script>
+</body>
+</html>
