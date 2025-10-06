@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>miocoru</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -30,6 +30,7 @@
             line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
         .container {
@@ -199,10 +200,11 @@
         .sticker {
             position: fixed;
             z-index: 1;
-            pointer-events: none;
+            pointer-events: auto;
             user-select: none;
             opacity: 0.7;
             transition: transform 0.3s ease, opacity 0.3s ease;
+            touch-action: manipulation;
         }
 
         .sticker:hover {
@@ -264,6 +266,18 @@
             }
         }
 
+        /* Исправления для iOS */
+        @supports (-webkit-touch-callout: none) {
+            .sticker {
+                position: absolute;
+                pointer-events: auto;
+            }
+            body {
+                -webkit-overflow-scrolling: touch;
+                overflow-x: hidden;
+            }
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -295,26 +309,28 @@
 <body>
     <div class="bg-blur"></div>
     
-    <img src="st1.png" class="sticker sticker-1" alt="sticker">
-    <img src="st3.png" class="sticker sticker-2" alt="sticker">
-    <img src="st2.png" class="sticker sticker-3" alt="sticker">
-    <img src="st4.png" class="sticker sticker-4" alt="sticker">
-    <img src="st2.png" class="sticker sticker-5" alt="sticker">
-    <img src="st1.png" class="sticker sticker-6" alt="sticker">
-    <img src="st4.png" class="sticker sticker-7" alt="sticker">
-    <img src="st3.png" class="sticker sticker-8" alt="sticker">
-    <img src="st4.png" class="sticker sticker-9" alt="sticker">
-    <img src="st2.png" class="sticker sticker-10" alt="sticker">
-    <img src="st1.png" class="sticker sticker-11" alt="sticker">
-    <img src="st3.png" class="sticker sticker-12" alt="sticker">
-    <img src="st2.png" class="sticker sticker-13" alt="sticker">
-    <img src="st4.png" class="sticker sticker-14" alt="sticker">
-    <img src="st1.png" class="sticker sticker-15" alt="sticker">
-    <img src="st3.png" class="sticker sticker-16" alt="sticker">
-    <img src="st4.png" class="sticker sticker-17" alt="sticker">
-    <img src="st1.png" class="sticker sticker-18" alt="sticker">
-    <img src="st2.png" class="sticker sticker-19" alt="sticker">
-    <img src="st3.png" class="sticker sticker-20" alt="sticker">
+    <div id="stickers-container">
+        <img src="st1.png" class="sticker sticker-1" alt="sticker">
+        <img src="st3.png" class="sticker sticker-2" alt="sticker">
+        <img src="st2.png" class="sticker sticker-3" alt="sticker">
+        <img src="st4.png" class="sticker sticker-4" alt="sticker">
+        <img src="st2.png" class="sticker sticker-5" alt="sticker">
+        <img src="st1.png" class="sticker sticker-6" alt="sticker">
+        <img src="st4.png" class="sticker sticker-7" alt="sticker">
+        <img src="st3.png" class="sticker sticker-8" alt="sticker">
+        <img src="st4.png" class="sticker sticker-9" alt="sticker">
+        <img src="st2.png" class="sticker sticker-10" alt="sticker">
+        <img src="st1.png" class="sticker sticker-11" alt="sticker">
+        <img src="st3.png" class="sticker sticker-12" alt="sticker">
+        <img src="st2.png" class="sticker sticker-13" alt="sticker">
+        <img src="st4.png" class="sticker sticker-14" alt="sticker">
+        <img src="st1.png" class="sticker sticker-15" alt="sticker">
+        <img src="st3.png" class="sticker sticker-16" alt="sticker">
+        <img src="st4.png" class="sticker sticker-17" alt="sticker">
+        <img src="st1.png" class="sticker sticker-18" alt="sticker">
+        <img src="st2.png" class="sticker sticker-19" alt="sticker">
+        <img src="st3.png" class="sticker sticker-20" alt="sticker">
+    </div>
     
     <div class="container">
         <header class="header fade-in">
@@ -360,72 +376,102 @@
                     }, index * 100);
                 });
             }, 300);
+
+            // Исправленная функция для позиционирования стикеров
+            function positionStickers() {
+                const stickers = document.querySelectorAll('.sticker');
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                
+                stickers.forEach(sticker => {
+                    const maxX = window.innerWidth - sticker.offsetWidth;
+                    const maxY = window.innerHeight - sticker.offsetHeight;
+                    
+                    let x, y;
+                    let attempts = 0;
+                    const maxAttempts = 30;
+                    
+                    // Для iOS используем более простой алгоритм
+                    if (isIOS) {
+                        x = Math.random() * maxX;
+                        y = Math.random() * maxY;
+                    } else {
+                        const container = document.querySelector('.container');
+                        const containerRect = container.getBoundingClientRect();
+                        
+                        do {
+                            x = Math.random() * maxX;
+                            y = Math.random() * maxY;
+                            attempts++;
+                        } while (
+                            attempts < maxAttempts && 
+                            x > containerRect.left - sticker.offsetWidth && 
+                            x < containerRect.right && 
+                            y > containerRect.top - sticker.offsetHeight && 
+                            y < containerRect.bottom
+                        );
+                    }
+                    
+                    sticker.style.left = x + 'px';
+                    sticker.style.top = y + 'px';
+                    
+                    // Для iOS добавляем дополнительные стили
+                    if (isIOS) {
+                        sticker.style.position = 'fixed';
+                        sticker.style.zIndex = '1';
+                    }
+                });
+            }
+
+            // Улучшенный ресайз с троттлингом
+            let resizeTimeout;
+            function handleResize() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(positionStickers, 250);
+            }
+
+            window.addEventListener('load', positionStickers);
+            window.addEventListener('resize', handleResize);
+            window.addEventListener('orientationchange', function() {
+                setTimeout(positionStickers, 500);
+            });
+
+            // Инициализация позиционирования
+            positionStickers();
+
+            // Улучшенные обработчики для стикеров
+            document.querySelectorAll('.sticker').forEach(sticker => {
+                sticker.addEventListener('touchstart', function(e) {
+                    this.style.opacity = '0.9';
+                    this.style.transform = 'scale(1.2) rotate(10deg)';
+                    e.preventDefault();
+                });
+                
+                sticker.addEventListener('touchend', function() {
+                    this.style.opacity = '0.7';
+                    this.style.transform = '';
+                });
+            });
+
+            document.querySelectorAll('.link-item').forEach(link => {
+                link.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const angleX = (y - centerY) / 15;
+                    const angleY = (centerX - x) / 15;
+                    
+                    this.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) translateY(-2px) scale(1.02)`;
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+                });
+            });
         });
-
-        document.querySelectorAll('.link-item').forEach(link => {
-            link.addEventListener('mousemove', function(e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const angleX = (y - centerY) / 15;
-                const angleY = (centerX - x) / 15;
-                
-                this.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) translateY(-2px) scale(1.02)`;
-            });
-            
-            link.addEventListener('mouseleave', function() {
-                this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
-            });
-        });
-
-        document.querySelectorAll('.sticker').forEach(sticker => {
-            sticker.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.2) rotate(10deg)';
-                this.style.opacity = '0.9';
-            });
-            
-            sticker.addEventListener('mouseleave', function() {
-                this.style.transform = '';
-                this.style.opacity = '0.7';
-            });
-        });
-
-        function positionStickers() {
-            const stickers = document.querySelectorAll('.sticker');
-            const container = document.querySelector('.container');
-            const containerRect = container.getBoundingClientRect();
-            
-            stickers.forEach(sticker => {
-                const maxX = window.innerWidth - sticker.offsetWidth;
-                const maxY = window.innerHeight - sticker.offsetHeight;
-                
-                let x, y;
-                let attempts = 0;
-                const maxAttempts = 50;
-                
-                do {
-                    x = Math.random() * maxX;
-                    y = Math.random() * maxY;
-                    attempts++;
-                } while (
-                    attempts < maxAttempts && 
-                    x > containerRect.left - sticker.offsetWidth && 
-                    x < containerRect.right && 
-                    y > containerRect.top - sticker.offsetHeight && 
-                    y < containerRect.bottom
-                );
-                
-                sticker.style.left = x + 'px';
-                sticker.style.top = y + 'px';
-            });
-        }
-
-        window.addEventListener('load', positionStickers);
-        window.addEventListener('resize', positionStickers);
     </script>
 </body>
 </html>
